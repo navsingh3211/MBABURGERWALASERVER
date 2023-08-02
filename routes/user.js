@@ -21,7 +21,8 @@ router.get("/login",
     }
 );
 
-router.get("/me",isAuthenticated, myProfile);
+// router.get("/me",isAuthenticated, myProfile);
+router.get("/me", myProfile);
 router.get("/logout", logout);
 
 //Admin routes
