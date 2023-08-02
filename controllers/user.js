@@ -10,18 +10,43 @@ export const myProfile = (req, res, next) => {
     })
 }
 
-export const logout = (req, res, next) => {
-    req.session.destroy((error) => {
-        if (error) return next(error);
-      res.clearCookie("connect.sid", {
-        secure: process.env.NODE_ENV === "development" ? false : true,
-        httpOnly: process.env.NODE_ENV === "development" ? false : true,
-        sameSite: process.env.NODE_ENV === "development" ? false : "none",
-      });
-        res.status(200).json({
-            message:"Logged Out"
+// export const logout = (req, res, next) => {
+//     req.session.destroy((error) => {
+//         if (error) return next(error);
+//       res.clearCookie("connect.sid", {
+//         secure: process.env.NODE_ENV === "development" ? false : true,
+//         httpOnly: process.env.NODE_ENV === "development" ? false : true,
+//         sameSite: process.env.NODE_ENV === "development" ? false : "none",
+//       });
+//         res.status(200).json({
+//             message:"Logged Out"
+//         })
+//     })
+// }
+
+export const logout = async (req, res, next) => {
+  try{
+    if (req.session) {
+        await req.session.destroy((error) => {
+            // if (error) return next(error);
+            res.clearCookie("connect.sid", {
+                secure: process.env.NODE_ENV === "development" ? false : true,
+                httpOnly: process.env.NODE_ENV === "development" ? false : true,
+                sameSite: process.env.NODE_ENV === "development" ? false : "none",
+            });
+            res.status(200).json({
+                message:"Logged Out"
+            })
         })
-    })
+    }else{
+        console.log('No session exists');
+    }
+    
+  }catch(error){
+    console.error('Error destroying session:', error);
+    res.status(500).send('Internal Server Error');
+  }
+    
 }
 
 //admin controller
